@@ -1,5 +1,6 @@
 import { Card, CardBody, CardImg, CardText } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Rating from "./Rating";
 
 //shaping the product object
 interface product {
@@ -28,11 +29,14 @@ function Products({product}: productsProps) {
       </Link>
       <CardBody>
         <Link className="nav-link" to={`product/${product._id}`}>
-          <Card.Title  as="div">
+          <Card.Title className="product-title"  as="div">
             <strong>{product.name}</strong>
           </Card.Title> 
         </Link>
       </CardBody>
+      <CardText as="div">
+        <Rating text={`${product.numReviews} reviews`} value={product.rating}/>
+      </CardText>
       <CardText as="h3">${product.price}</CardText>
     </Card>
   );

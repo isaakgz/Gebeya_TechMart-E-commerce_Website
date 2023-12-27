@@ -1,5 +1,4 @@
 import { Nav, Navbar, Container } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import { FaUser } from "react-icons/fa";
 import { MdShoppingCart } from "react-icons/md";
 import logo from "../assets/logo.png";
