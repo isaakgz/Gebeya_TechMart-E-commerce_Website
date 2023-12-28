@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Rating from "./Rating";
 
 //shaping the product object
-interface product {
+export interface product {
   _id: string;
   name: string;
   image: string;
