@@ -5,11 +5,16 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon Backend/server.js"
+    "start": "nodemon Backend/server.js",
+    "server": "nodemon Backend/server.js",
+    "client": "npm run dev --prefix front-end",
+    "dev": "concurrently \"npm run client\" \"npm run server\" "
+    
   },
   "author": "yesak",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2"
