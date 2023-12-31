@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import products from "../products";
 import {
   Button,
   Card,
@@ -10,16 +9,31 @@ import {
   Row,
 } from "react-bootstrap";
 import Rating from "../components/Rating";
-// import { product } from "../components/Products";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Product } from "../components/Products";
 
-type productId = {
+type ProductId = {
   id: string;
 };
 
 function ProductPage() {
-  const { id: productId } = useParams<productId>();
-  const product = products.find((p) => p._id === productId);
-  // console.log(product)
+    // Extract the product ID from the URL parameters
+  const { id: productId } = useParams<ProductId>();
+
+  const [product, setProduct] = useState<Partial<Product>>({});
+
+  /// Fetch product details from the server when the component mounts
+  useEffect(() => {
+    axios
+      .get<Product>(`/api/products/${productId}`)
+      .then((res) => {
+        setProduct(res.data);
+      })
+      .catch((error) => console.error("error fetching data", error));
+  }, [productId]);
+
+ 
 
   return (
     <>
@@ -37,7 +51,7 @@ function ProductPage() {
             </ListGroupItem>
 
             <ListGroupItem className="mt-2">
-              <Rating 
+              <Rating
                 text={`${product?.numReviews} reviews`}
                 value={product?.rating ?? 0}
               />

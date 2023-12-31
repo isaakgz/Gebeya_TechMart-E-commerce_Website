@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Rating from "./Rating";
 
 //shaping the product object
-export interface product {
+export interface Product {
   _id: string;
   name: string;
   image: string;
@@ -18,10 +18,10 @@ export interface product {
 
 //define props
 interface productsProps {
-    product:product
+  product: Product;
 }
 
-function Products({product}: productsProps) {
+function Products({ product }: productsProps) {
   return (
     <Card className="my-3 p-3 rounded">
       <Link to={`product/${product._id}`}>
@@ -29,13 +29,13 @@ function Products({product}: productsProps) {
       </Link>
       <CardBody>
         <Link className="nav-link" to={`product/${product._id}`}>
-          <Card.Title className="product-title"  as="div">
+          <Card.Title className="product-title" as="div">
             <strong>{product.name}</strong>
-          </Card.Title> 
+          </Card.Title>
         </Link>
       </CardBody>
       <CardText as="div">
-        <Rating text={`${product.numReviews} reviews`} value={product.rating}/>
+        <Rating text={`${product.numReviews} reviews`} value={product.rating} />
       </CardText>
       <CardText as="h3">${product.price}</CardText>
     </Card>
