@@ -10,6 +10,8 @@ import {
 } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useGetProductsDetailQuery } from "../features/productSlice/productApiSlice";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 type ProductId = {
   id: string;
@@ -32,9 +34,11 @@ function ProductPage() {
       </Link>
 
       {isLoading ? (
-        <div>Loading...</div>
+        <Loader />
       ) : isError ? (
-        <div>Could not find product with an ID of {productId}</div>
+        <Message variant="danger">
+          <p>Could not find product with an ID of</p>
+        </Message>
       ) : (
         <>
           <Row>
