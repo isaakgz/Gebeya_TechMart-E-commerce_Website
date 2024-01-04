@@ -1,33 +1,33 @@
 import { Col, Row } from "react-bootstrap";
-// import products from "../products";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Products, { Product } from "../components/Products";
+import Products from "../components/Products";
+import { useGetProductsQuery } from "../features/productSlice/productApiSlice";
 
 function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  // fetching data from API and updating state using useEffect hook
-  useEffect(() => {
-    axios
-      .get<Product[]>("/api/products")
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((err) => console.error("error fetching data", err));
-  }, []);
+  const { data: products, isLoading, isError } = useGetProductsQuery();
 
   return (
     <>
-      <h1>Latest Products</h1>
-      <Row>
-        {products.map((product) => (
-          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-            {/* Component to display each product */}
-            <Products product={product} />
-          </Col>
-        ))}
-      </Row>
+      {isLoading ? (
+        <div>
+          <h1>Loading...</h1>
+        </div>
+      ) : isError ? (
+        <div>
+          <h1>Error Loading Data!</h1>
+        </div>
+      ) : (
+        <>
+          <h1>Latest Products</h1>
+          <Row>
+            {products?.map((product) => (
+              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                {/* Component to display each product */}
+                <Products product={product} />
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
     </>
   );
 }
