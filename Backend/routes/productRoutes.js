@@ -1,23 +1,33 @@
-// import the express library
 import express from "express";
-
-// create a router instance
 const router = express.Router();
+import asyncHandler from "../middleware/asyncHandler.js";
+import Product from "../models/productModel.js";
 
-// define a get request to the "/api/products" endpoint
-router.get("/", (req, res) => {
-  // return all products as a JSON object
-  res.json(products);
-});
+// Get all products
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const products = await Product.find({});
+    res.json(products);
+  })
+);
 
-// define a get request to the "/api/products/:id" endpoint
-router.get("/:id", (req, res) => {
-  // find the product with the given id in the products array
-  const product = products.find((p) => p._id === req.params.id);
+// Get a specific product by ID
+router.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    // Find the product with the given id using Product.findById
+    const product = await Product.findById(req.params.id);
 
-  // return the product as a JSON object
-  res.send(product);
-});
+    // If the product is found, send it as JSON response
+    if (product) {
+      res.json(product);
+    } else {
+      // If the product is not found, send a 404 response
+      res.status(404).json({ message: "Product not found" });
+    }
+  })
+);
 
-// export the router for use in other files
+// Export the router for use in other files
 export default router;
