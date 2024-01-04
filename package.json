@@ -8,12 +8,15 @@
     "start": "nodemon Backend/server.js",
     "server": "nodemon Backend/server.js",
     "client": "npm run dev --prefix front-end",
-    "dev": "concurrently \"npm run client\" \"npm run server\" "
+    "dev": "concurrently \"npm run client\" \"npm run server\" ",
+    "data:import": "node Backend/seeder.js",
+    "data:destroy": "node Backend/seeder.js -d"
   },
   "author": "yesak",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
