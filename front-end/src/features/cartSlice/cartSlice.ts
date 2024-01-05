@@ -1,19 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CartItem, CartState, updateCart } from "../../utils/cartUtils";
 
-interface CartItem {
-  _id: string;
-  name: string;
-  price: number;
-  qty: number;
-}
 
-interface CartState {
-  cartItems: CartItem[];
-  itemsPrice: number;
-  shippingPrice: number;
-  taxPrice: number;
-  totalPrice: number;
-}
+
+
 
 const storedCart = localStorage.getItem("cart");
 const initialState: CartState = storedCart
@@ -38,21 +28,9 @@ const cartSlice = createSlice({
         state.cartItems = [...state.cartItems, newItem];
       }
 
-      // Recalculate the prices
-      state.itemsPrice = state.cartItems
-        .reduce((acc, item) => acc + item.price * item.qty, 0);
+     return updateCart(state)
 
-      // Shipping price
-      state.shippingPrice = (state.itemsPrice > 100 ? 0 : 10);
-
-      // Tax price (15%)
-      state.taxPrice = state.itemsPrice * 0.15;
-
-      // Total price
-      state.totalPrice = (state.itemsPrice + state.shippingPrice + state.taxPrice).toFixed(2);
-
-      // Update the localStorage
-      localStorage.setItem("cart", JSON.stringify(state));
+      
     },
   },
 });
