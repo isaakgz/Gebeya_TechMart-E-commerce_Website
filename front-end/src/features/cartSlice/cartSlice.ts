@@ -21,7 +21,7 @@ const cartSlice = createSlice({
       if (existItem) {
         // If the item already exists in the cart, update its quantity
         state.cartItems = state.cartItems.map((x) =>
-          x._id === existItem._id ? { ...existItem, qty: x.qty + newItem.qty } : x
+          x._id === existItem._id ? newItem : x
         );
       } else {
         // If the item is not in the cart, add it
@@ -32,9 +32,14 @@ const cartSlice = createSlice({
 
       
     },
+    removeFromCart:(state, action: PayloadAction<CartItem>)=>{
+      const removedItem=action.payload;
+      state.cartItems = state.cartItems.filter((x) => x._id !==removedItem._id);
+      return updateCart(state)
+    }
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, removeFromCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

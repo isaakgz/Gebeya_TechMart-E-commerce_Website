@@ -1,4 +1,6 @@
 export interface CartItem {
+  countInStock:number;
+  image: string | undefined;
   _id: string;
   name: string;
   price: number;
