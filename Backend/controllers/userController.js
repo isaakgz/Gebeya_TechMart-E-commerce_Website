@@ -6,6 +6,23 @@ import User from "../models/userModels.js";
 // @access Public
 
 const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  //check if email and password exist from databse
+  const user = await User.findOne({ email: email });
+
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  }else{
+    res.status(401);
+    throw new Error("Invalid Email or password")
+  }
+
   res.send("auth user");
 });
 // @desc  register user
@@ -76,5 +93,5 @@ export {
   getUsers,
   deleteUsers,
   getUsersById,
-  UpdateUser
+  UpdateUser,
 };

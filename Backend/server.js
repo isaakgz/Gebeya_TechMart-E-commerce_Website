@@ -10,15 +10,15 @@ const port = process.env.PORT || 8000;
 await connectDB();
 const app = express();
 
+//body parser miidelware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("wellocme");
 });
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
-
-
-
 
 // Global Error Handling Middleware
 app.use(notFound);
