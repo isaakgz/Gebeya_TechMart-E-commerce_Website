@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 import connectDB from "./config/db.js";
 import { errorHandler, notFound } from "./middleware/errorMiddelware.js";
@@ -10,9 +11,14 @@ const port = process.env.PORT || 8000;
 await connectDB();
 const app = express();
 
+
+
 //body parser miidelware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//cookie parser middilewre
+app.use(cookieParser())
 
 app.get("/", (req, res) => {
   res.send("wellocme");
