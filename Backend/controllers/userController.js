@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModels.js";
-import jwt from "jsonwebtoken";
-
+import genereteToken from "../utils/generetToken.js";
+import Joi from "joi";
 // @desc  auth user & token
 // @desc  GET /api/users/Login
 // @access Public
@@ -13,18 +13,8 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: email });
 
   if (user && (await user.matchPassword(password))) {
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRETE, {
-      expiresIn: "30d",
-    });
+    genereteToken(res, user._id);
 
-    //set jwt as HTTP-only Cooki
-
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "developemnt",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
     res.json({
       _id: user._id,
       name: user.name,
@@ -43,7 +33,51 @@ const authUser = asyncHandler(async (req, res) => {
 // @access Public
 
 const registerUser = asyncHandler(async (req, res) => {
-  res.send("regisrtings user");
+  const { name, email, password } = req.body;
+
+  const userExist = await User.findOne({ email });
+
+  if (userExist) {
+    res.status(400);
+    throw new Error("Email already in use");
+  } else {
+    const schema = Joi.object({
+      name: Joi.string().min(6,).max(30).required(),
+      email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+      }),
+      password: Joi.string()
+      .min(8)
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+    });
+    const { error } = schema.validate(req.body);
+    if (error) {
+      res.status(400);
+      throw new Error(error.details[0].message);
+    }
+    // Create a new user and save it into the database
+
+    const user = await User.create({
+      name: name,
+      email: email,
+      password: password,
+    });
+    if (user) {
+      genereteToken(res, user._id);
+
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      });
+    } else {
+      res.status(400);
+      throw new Error("invalid user data");
+    }
+    res.send("regisrtings user");
+  }
 });
 
 // @desc  Logout the user and clear the cookie
