@@ -2,6 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModels.js";
 import genereteToken from "../utils/generetToken.js";
 import Joi from "joi";
+import {userSchema} from "../utils/validationSchema.js"
 // @desc  auth user & token
 // @desc  GET /api/users/Login
 // @access Public
@@ -41,15 +42,9 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Email already in use");
   } else {
-    const schema = Joi.object({
-      name: Joi.string().min(6).max(30).required(),
-      email: Joi.string().email({
-        minDomainSegments: 2,
-        tlds: { allow: ["com", "net"] },
-      }),
-      password: Joi.string().min(8).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    });
-    const { error } = schema.validate(req.body);
+    
+    //validate user input
+    const { error } = userSchema.validate(req.body);
     if (error) {
       res.status(400);
       throw new Error(error.details[0].message);
@@ -121,21 +116,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    const schema = Joi.object({
-      name: Joi.string().min(6).max(30),
-      email: Joi.string().email({
-        minDomainSegments: 2,
-        tlds: { allow: ["com", "net"] },
-      }),
-      password: Joi.string().min(8).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    });
+   
 
     // Validate each field individually
-    const validationResults = schema.validate(req.body, { abortEarly: false });
+    const {error} = userSchema.validate(req.body, { abortEarly: false });
 
-    if (validationResults.error) {
+    if (error) {
       res.status(400);
-      throw new Error(validationResults.error.details.map((detail) => detail.message).join(", "));
+      throw new Error(error.details.map((detail) => detail.message).join(", "));
     }
 
     // Update user fields if they are present in the request
