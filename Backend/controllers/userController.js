@@ -42,14 +42,12 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Email already in use");
   } else {
     const schema = Joi.object({
-      name: Joi.string().min(6,).max(30).required(),
+      name: Joi.string().min(6).max(30).required(),
       email: Joi.string().email({
         minDomainSegments: 2,
         tlds: { allow: ["com", "net"] },
       }),
-      password: Joi.string()
-      .min(8)
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      password: Joi.string().min(8).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
     });
     const { error } = schema.validate(req.body);
     if (error) {
@@ -98,6 +96,20 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @access public
 
 const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("No user with this id!");
+  }
+
   res.send("user Profile");
 });
 
@@ -106,8 +118,48 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @access private
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send("update user Profile");
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    const schema = Joi.object({
+      name: Joi.string().min(6).max(30),
+      email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+      }),
+      password: Joi.string().min(8).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+    });
+
+    // Validate each field individually
+    const validationResults = schema.validate(req.body, { abortEarly: false });
+
+    if (validationResults.error) {
+      res.status(400);
+      throw new Error(validationResults.error.details.map((detail) => detail.message).join(", "));
+    }
+
+    // Update user fields if they are present in the request
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(401);
+    throw new Error("User not found");
+  }
 });
+
 
 // @desc get users
 // @desc  get /api/users
