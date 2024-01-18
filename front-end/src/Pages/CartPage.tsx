@@ -98,7 +98,7 @@ function CartPage() {
                 type="button"
                 className="btn-secondary"
                 disabled={cartItems.length === 0}
-                onClick={checkOuttHandler()}
+                onClick={()=>checkOuttHandler()}
               >
                 Proceed To check Out
               </Button>

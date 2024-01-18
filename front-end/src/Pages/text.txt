@@ -1,0 +1,15 @@
+const userSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .max(50, { message: "Password cannot exceed 50 characters'" })
+    .regex(/[A-Za-z]/, {
+      message: "Password must contain at least one letter",
+    })
+    .regex(/[0-9]/, "Password must contain at least one digit")
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character"
+    ),
+});
