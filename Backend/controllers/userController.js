@@ -83,7 +83,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     expires: new Date(0),
     // maxAge :new Date(0).getTime()
   });
-  res.status(201).json({ massage: "logged out successufully" });
+  res.status(201).json({ message: "logged out successufully" });
 });
 
 // @desc get user Profile

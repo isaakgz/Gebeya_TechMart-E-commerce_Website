@@ -5,7 +5,7 @@ interface AuthState {
     id: string;
     email: string;
     password: string;
-    name:string
+    name: string;
   } | null;
 }
 
@@ -24,11 +24,12 @@ const authSlice = createSlice({
       localStorage.setItem("userInfo", JSON.stringify(action.payload));
     },
     logout: (state) => {
-        state.userInfo = null;
-        localStorage.clear();
-      },
+      state.userInfo = null;
+      localStorage.removeItem("userInfo");
+      localStorage.clear()
+    },
   },
 });
 
-export const {setCredentials, logout} = authSlice.actions
+export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;
