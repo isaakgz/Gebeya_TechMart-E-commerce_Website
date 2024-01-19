@@ -18,7 +18,7 @@ import { setCredentials } from "../features/authSlice/authSlice";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 
 // creating a schema for for input data
 const userSchema = z.object({

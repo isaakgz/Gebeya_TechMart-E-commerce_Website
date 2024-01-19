@@ -2,7 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModels.js";
 import genereteToken from "../utils/generetToken.js";
 import Joi from "joi";
-import {userSchema} from "../utils/validationSchema.js"
+import { userSchema } from "../utils/validationSchema.js";
 // @desc  auth user & token
 // @desc  GET /api/users/Login
 // @access Public
@@ -23,8 +23,8 @@ const authUser = asyncHandler(async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(401);
-    throw new Error("Invalid Email or password");
+    res.status(401).json({error:"Invalid Email or password"});
+    // throw new Error("Invalid Email or password");
   }
 
   res.send("auth user");
@@ -39,14 +39,12 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExist = await User.findOne({ email });
 
   if (userExist) {
-    res.status(400);
-    throw new Error("Email already in use");
+    res.status(400).json({ error: "Email already in use" });
   } else {
-    
     //validate user input
     const { error } = userSchema.validate(req.body);
     if (error) {
-      res.status(400);
+      res.status(400).json({error:"invalid user data"});
       throw new Error(error.details[0].message);
     }
     // Create a new user and save it into the database
@@ -116,10 +114,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-   
-
     // Validate each field individually
-    const {error} = userSchema.validate(req.body, { abortEarly: false });
+    const { error } = userSchema.validate(req.body, { abortEarly: false });
 
     if (error) {
       res.status(400);
@@ -147,7 +143,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
-
 
 // @desc get users
 // @desc  get /api/users
