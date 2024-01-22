@@ -16,6 +16,8 @@ import ProductPage from "./Pages/ProductPage.tsx";
 import CartPage from "./Pages/CartPage.tsx";
 import LoginPage from "./Pages/LoginPage.tsx";
 import SignUpPage from "./Pages/SignUpPage.tsx";
+import ShippingPage from "./Pages/ShippingPage.tsx";
+import PrivateRoute from "./components/PrivateRoute.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +28,9 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<SignUpPage />} />
 
+      <Route path="" element={<PrivateRoute />}>
+        <Route path="/shipping" element={<ShippingPage />} />
+      </Route>
     </Route>
   )
 );

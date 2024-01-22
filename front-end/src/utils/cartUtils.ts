@@ -1,10 +1,16 @@
 export interface CartItem {
-  countInStock:number;
+  countInStock: number;
   image: string | undefined;
   _id: string;
   name: string;
   price: number;
   qty: number;
+}
+export interface shippingAddres {
+  address?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
 }
 export interface CartState {
   cartItems: CartItem[];
@@ -12,6 +18,7 @@ export interface CartState {
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
+  shippingAdress:shippingAddres
 }
 export const updateCart = (state: CartState) => {
   // Recalculate the prices
