@@ -12,13 +12,20 @@ export interface shippingAddres {
   postalCode?: string;
   country?: string;
 }
+// export interface PamentMethod{
+//   paymentMethod?:string,
+ 
+
+// }
 export interface CartState {
   cartItems: CartItem[];
   itemsPrice: number;
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
-  shippingAdress:shippingAddres
+  shippingAdress:shippingAddres;
+  paymentMethod:string;
+
 }
 export const updateCart = (state: CartState) => {
   // Recalculate the prices
