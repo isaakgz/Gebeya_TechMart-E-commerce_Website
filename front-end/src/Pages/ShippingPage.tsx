@@ -5,6 +5,7 @@ import { Form, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { saveShippingAdress } from "../features/cartSlice/cartSlice";
+import CheckOutSteps from "../components/CheckOutSteps";
 
 function ShippingPage() {
   const cart = useSelector((state: RootState) => state.cart);
@@ -27,6 +28,7 @@ function ShippingPage() {
   };
   return (
     <FormContainer>
+      <CheckOutSteps step1={true} step2={true} step3={false} step4={false} />
       <h1>Shipping Information</h1>
       <Form onSubmit={submitHandler}>
         <FormGroup controlId="adress" className="my-2">
