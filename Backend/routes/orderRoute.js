@@ -10,7 +10,7 @@ import {
 } from "../controllers/orderConroller.js";
 import { protect, admin } from "../middleware/authMiddeleare.js";
 
-router.route("/").post(addOrderItem).get(protect, admin, getOrders);
+router.route("/").post(protect, addOrderItem).get(protect, admin, getOrders);
 
 router.route("/mine").get(protect, getMyOrders);
 router.route("/:id").get(protect, admin, getMyOrdersById);

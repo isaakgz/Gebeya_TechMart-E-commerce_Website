@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 //create order schema
 const orderSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Types.ObjectId, ref: "User", required: true }, //user who placed the
+    user: { type: mongoose.Types.ObjectId, ref: "User" }, //user who placed the
     orderItems: [
       {
         name: { type: String, required: true },
@@ -18,13 +18,13 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     shippingAddress: {
-      address: { type: String, required: true },
-      city: { type: String, required: true },
-      postalCode: { type: String, required: true },
-      country: { type: String, required: true },
+      address: { type: String },
+      city: { type: String},
+      postalCode: { type: String },
+      country: { type: String },
     },
-    paymentMethod: { type: String, required: true },
-    pamentResult: {
+    paymentMethod: { type: String },
+    paymentResult: {
       id: { type: String },
       status: { type: String },
       cardType: { type: String },

@@ -12,28 +12,30 @@ const addOrderItem = asyncHandler(async (req, res) => {
     paymentMethod,
     taxPrice,
     totalPrice,
-    shippingAdress,
+    shippingAddress, // Corrected here
   } = req.body;
 
   if (orderItems && orderItems.length === 0) {
     return res.status(400).json({ error: "No item in the cart" });
     throw new Error("No item in the cart");
   } else {
-    //build a new order and save it to database
+    const userId = req.user ? req.user._id : null;
+
     const order = new Order({
       orderItems: orderItems.map((x) => ({
         ...x,
         product: x._id,
         _id: undefined,
       })),
-      userId: req.user._id,
+      user: userId, // Corrected here
       itemsPrice,
       shippingPrice,
       paymentMethod,
       taxPrice,
       totalPrice,
-      shippingAdress,
+      shippingAddress, // Corrected here
     });
+
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
   }

@@ -6,7 +6,7 @@ export interface CartItem {
   price: number;
   qty: number;
 }
-export interface shippingAddres {
+export interface shippingAddress {
   address?: string;
   city?: string;
   postalCode?: string;
@@ -23,7 +23,7 @@ export interface CartState {
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
-  shippingAdress:shippingAddres;
+  shippingAdress:shippingAddress;
   paymentMethod:string;
 
 }
