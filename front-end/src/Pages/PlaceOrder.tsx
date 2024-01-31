@@ -39,7 +39,7 @@ const PlaceOrder = () => {
       const res = await createOrder({
         orderItems: cart.cartItems,
         paymentMethod: cart.paymentMethod,
-        itemsPrice: cart.itemsPrice,
+        itemPrice: cart.itemPrice,
         taxPrice: cart.taxPrice,
         shippingPrice: cart.shippingPrice,
         totalPrice: cart.totalPrice,
@@ -119,7 +119,7 @@ const PlaceOrder = () => {
               <ListGroupItem>
                 <Row>
                   <Col>Items:</Col>
-                  <Col>${cart.itemsPrice}</Col>
+                  <Col>${cart.itemPrice}</Col>
                 </Row>
               </ListGroupItem>
               <ListGroupItem>

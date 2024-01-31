@@ -7,7 +7,7 @@ import Order from "../models/orderModel.js";
 const addOrderItem = asyncHandler(async (req, res) => {
   const {
     orderItems,
-    itemsPrice,
+    itemPrice,
     shippingPrice,
     paymentMethod,
     taxPrice,
@@ -19,7 +19,7 @@ const addOrderItem = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "No item in the cart" });
     throw new Error("No item in the cart");
   } else {
-    const userId = req.user ? req.user._id : null;
+    const userId =req.user?._id ;
 
     const order = new Order({
       orderItems: orderItems.map((x) => ({
@@ -28,7 +28,7 @@ const addOrderItem = asyncHandler(async (req, res) => {
         _id: undefined,
       })),
       user: userId, // Corrected here
-      itemsPrice,
+      itemPrice,
       shippingPrice,
       paymentMethod,
       taxPrice,
@@ -53,24 +53,39 @@ const getMyOrders = asyncHandler(async (req, res) => {
 //@route Get /api/orders/:id
 //@acess private
 const getMyOrdersById = asyncHandler(async (req, res) => {
-  const order = await Order.findOne({ _id: req.params.id}).populate("user", "name,email");
+  const order = await Order.findOne({ _id: req.params.id }).populate("user", "name email");
 
-  if (order){
+  if (order) {
     res.status(200).json(order);
-  }else{
-    res.status(404).json({error:"Order not found!"});
-    throw new Error("Order not found!")
+  } else {
+    res.status(404).json({ error: "Order not found!" });
+    throw new Error("Order not found!");
   }
-  
 });
+
 
 // @desc get update order to paid
-//@route Get /api/orders/:id/pay
+//@route post /api/orders/:id/pay
 //@acess private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  res.send(" update Order To Paid");
-  // const order = new Order({});
-});
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      emailAddress: req.body.payer.emailAddress,
+    };
+    const updatedOrder = await order.save();
+    res.status(200).json(updatedOrder);
+  } else {
+    res.status(404).json({ error: "Order not found!" });
+    throw new Error("Order not found!");
+  }
+ 
+}); 
 
 // @desc get update order to delivered
 //@route Get /api/orders/:id/deliver

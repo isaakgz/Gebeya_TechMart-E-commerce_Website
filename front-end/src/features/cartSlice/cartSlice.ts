@@ -13,7 +13,7 @@ const initialState: CartState = storedCart
       cartItems: [],
       shippingAdress: {},
       paymentMethod: "payPal",
-      itemsPrice: 0,
+      itemPrice: 0,
       shippingPrice: 0,
       taxPrice: 0,
       totalPrice: 0,

@@ -1,4 +1,5 @@
 export interface CartItem {
+  product: unknown;
   countInStock: number;
   image: string | undefined;
   _id: string;
@@ -19,7 +20,7 @@ export interface shippingAddress {
 // }
 export interface CartState {
   cartItems: CartItem[];
-  itemsPrice: number;
+  itemPrice: number;
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
@@ -29,20 +30,20 @@ export interface CartState {
 }
 export const updateCart = (state: CartState) => {
   // Recalculate the prices
-  state.itemsPrice = state.cartItems.reduce(
+  state.itemPrice = state.cartItems.reduce(
     (acc: number, item: { price: number; qty: number }) =>
       acc + item.price * item.qty,
     0
   );
 
   // Shipping price
-  state.shippingPrice = state.itemsPrice > 100 ? 0 : 10;
+  state.shippingPrice = state.itemPrice > 100 ? 0 : 10;
 
   // Tax price (15%)
-  state.taxPrice = state.itemsPrice * 0.15;
+  state.taxPrice = state.itemPrice * 0.15;
 
   // Total price
-  state.totalPrice = state.itemsPrice + state.shippingPrice + state.taxPrice;
+  state.totalPrice = state.itemPrice + state.shippingPrice + state.taxPrice;
 
   // Update the localStorage
   localStorage.setItem("cart", JSON.stringify(state));
