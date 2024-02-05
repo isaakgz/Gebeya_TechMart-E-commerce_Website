@@ -1,11 +1,26 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetordersDetailsQuery } from "../features/ordersSlice/orderApiSlice";
+import {
+  useGetordersDetailsQuery,
+  useGetPaypalClientIdQuery,
+  usePayOrderMutation,
+} from "../features/ordersSlice/orderApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { ReactNode } from "react";
-import { Card, Col, Image, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { ReactNode, useEffect } from "react";
+import {
+  Card,
+  Col,
+  Image,
+  ListGroup,
+  ListGroupItem,
+  Row,
+} from "react-bootstrap";
+//import papal button
+import { PayPalButton, SCRIPT_LOADING_STATE, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
-function OrderScreen() {
+function OrderPage() {
   const { id: orderId } = useParams();
 
   const {
@@ -14,6 +29,37 @@ function OrderScreen() {
     isLoading,
     isError,
   } = useGetordersDetailsQuery(orderId || "");
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const {
+    data: clientId,
+    isLoading: loadingPaypal,
+    isError: errorPaypal,
+  } = useGetPaypalClientIdQuery();
+
+  useEffect(() => {
+    if (!errorPaypal && !loadingPaypal && clientId?.clientId) {
+      const loadPaypalScript = async () => {
+        paypalDispatch({
+          type: "resetOptions",
+          value: {
+            clientId: clientId.clientId,
+            currency: "USD",
+          },
+        });
+        paypalDispatch({
+          type: "setLoadingStatus",
+          value: "pending" as SCRIPT_LOADING_STATE,
+        });
+        if (order && !order.isPaid){
+          if(window.paypal){
+            loadPaypalScript()
+          }
+        }
+      };
+    }
+  }, [order, clientId, paypalDispatch, loadingPaypal, errorPaypal]);
 
   return isLoading ? (
     <Loader />
@@ -75,11 +121,14 @@ function OrderScreen() {
                           <Image
                             src={item.image}
                             alt={item.name}
-                            fluid rounded
+                            fluid
+                            rounded
                           />
                         </Col>
                         <Col>
-                          <Link to={`/product/${item.product}`}>{item.name}</Link>
+                          <Link to={`/product/${item.product}`}>
+                            {item.name}
+                          </Link>
                         </Col>
                         <Col md={4}>
                           {item.qty} x ${item.price} = $
@@ -125,7 +174,6 @@ function OrderScreen() {
               </ListGroupItem>
               {/*pay order place ordr//*/}
               {/*maek as delivered//*/}
-
             </ListGroup>
           </Card>
         </Col>
@@ -134,4 +182,4 @@ function OrderScreen() {
   );
 }
 
-export default OrderScreen;
+export default OrderPage;
