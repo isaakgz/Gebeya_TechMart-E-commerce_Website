@@ -1,11 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { useEffect, useState } from "react";
-import { Button, Col, Form, FormGroup, FormLabel, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  FormGroup,
+  FormLabel,
+  Row,
+  Table,
+} from "react-bootstrap";
 import { useProfileMutation } from "../features/userApiSlices/userApiSlices";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 import { setCredentials } from "../features/authSlice/authSlice";
+import { useGetMyOrdersQuery } from "../features/ordersSlice/orderApiSlice";
+import Message from "../components/Message";
+import { LinkContainer } from "react-router-bootstrap";
+import { FaTimes } from "react-icons/fa";
 
 const ProfileScreen = () => {
   const [name, setName] = useState("");
@@ -17,6 +29,8 @@ const ProfileScreen = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
+
+  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
 
   useEffect(() => {
     if (userInfo) {
@@ -35,13 +49,13 @@ const ProfileScreen = () => {
           name,
           email,
         };
-  
+
         if (password) {
           data.password = password;
         }
-  
+
         const res = await updateProfile(data).unwrap();
-  
+
         if (res) {
           dispatch(setCredentials({ ...res }));
           toast.success("Profile Updated");
@@ -99,7 +113,58 @@ const ProfileScreen = () => {
           {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
-      <Col md={9}>ክድክ</Col>
+      <Col md={9}>
+        <h2>My Orders</h2>
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">Unknown error happned</Message>
+        ) : (
+          <Table striped hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Delivered</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders?.map((order) => (
+                <tr key={order._id as Key}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt?.substring(0, 10)}</td>
+                  <td>{order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt?.substring(0, 10)
+                    ) : (
+                      <FaTimes style={{ color: "red" }} />
+                    )}
+                  </td>
+                  <td>
+                    {order.isDelivered ? (
+                      order.deliveredAt?.substring(0, 10)
+                    ) : (
+                      <FaTimes style={{ color: "red" }} />
+ 
+                    )}
+                  </td>
+                  <td>
+                    <LinkContainer to={`/order/${order._id}`}>
+                      <Button variant="light" className="btn-sm">
+                        Details
+                      </Button>
+                    </LinkContainer>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Col>
     </Row>
   );
 };
