@@ -76,7 +76,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
       id: req.body.id,
       status: req.body.status,
       update_time: req.body.update_time,
-      emailAddress: req.body.payer.emailAddress,
+      emailAddress: req.body.payer.email_address,
     };
     const updatedOrder = await order.save();
     res.status(200).json(updatedOrder);
@@ -88,7 +88,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 }); 
 
 // @desc get update order to delivered
-//@route Get /api/orders/:id/deliver
+//@route put   /api/orders/:id/deliver
 //@acess private/admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
   res.send(" update Order To deliver");
