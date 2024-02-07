@@ -7,3 +7,15 @@
 
         username:yesakfordev
         pas:xrr4229x2UgK3nk
+
+
+
+        onApprove={async (data, actions) => {
+                            const orderID = data.orderID;
+                            const paymentResult = await actions.order.capture();
+                            payOrder({
+                              id: order?._id as string,
+                              orderID,
+                              paymentResult,
+                            });
+                          }}

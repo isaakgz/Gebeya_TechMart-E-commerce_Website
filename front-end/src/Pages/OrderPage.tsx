@@ -1,9 +1,14 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetordersDetailsQuery } from "../features/ordersSlice/orderApiSlice";
+import {
+  useGetordersDetailsQuery,
+  usePayOrderMutation,
+  useGetPaypalClientIdQuery,
+} from "../features/ordersSlice/orderApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import {
+  Button,
   Card,
   Col,
   Image,
@@ -12,15 +17,53 @@ import {
   Row,
 } from "react-bootstrap";
 
+//import paypal buttons
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { toast } from "react-toastify";
+
 function OrderPage() {
   const { id: orderId } = useParams();
 
   const {
     data: order,
-
+    refetch,
     isLoading,
     isError,
   } = useGetordersDetailsQuery(orderId || "");
+
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
+  const {
+    data: paypal,
+    isLoading: loadingPayPal,
+    error: erorrPayPal,
+  } = useGetPaypalClientIdQuery();
+
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (!erorrPayPal && !loadingPayPal && paypal?.clientId) {
+      const loadPayPalScript = async () => {
+        paypalDispatch({
+          type: "resetOptions",
+          value: {
+            clientId: paypal.clientId, // Fix: Change 'client-id' to 'clientId'
+            currency: "USD",
+          },
+        });
+        paypalDispatch({ type: "setLoadingStatus", value: "pending" }); // Fix: Change value to { state: "pending" }
+      };
+      if (order && !order.isPaid) {
+        if (!window.paypal) {
+          loadPayPalScript();
+        }
+      }
+    }
+  }, [paypal, paypalDispatch, order, erorrPayPal, loadingPayPal]);
 
   return isLoading ? (
     <Loader />
@@ -133,7 +176,71 @@ function OrderPage() {
                   <Col>${order?.totalPrice}</Col>
                 </Row>
               </ListGroupItem>
-              {!order}
+              {!order?.isPaid && (
+                <ListGroupItem>
+                  {loadingPay && <Loader />}
+                  {isPending ? (
+                    <Loader />
+                  ) : (
+                    <div>
+                      <Button
+                        onClick={async () => {
+                          await payOrder({ orderId, details: {payer:{}} });
+                          refetch();
+                          toast.success("Order is paid");
+                        }}
+                        style={{
+                          marginBottom: "10px",
+                        }}
+                      >
+                        Test Pay order
+                      </Button>
+                      <div>
+                        <PayPalButtons
+                          style={{
+                            layout: "horizontal",
+                            color: "gold",
+                            shape: "rect",
+                            label: "pay",
+                          }}
+                          createOrder={(_data, actions) => {
+                            return actions.order.create({
+                              purchase_units: [
+                                {
+                                  amount: {
+                                    value: order?.totalPrice?.toString(),
+                                  },
+                                },
+                              ],
+                            }).then((orderId) => {
+                              return orderId;
+                            });
+                          }}
+                          onError={(err) => {
+                            toast.error(err.toString());
+                           
+                            
+                          }}
+                          onApprove={async (data, actions) => {
+                            return actions.order.capture().then(async (details) => {
+                              try {
+                                await payOrder({orderId,  details})
+                                refetch();
+                                toast.success("Order is paid");
+                                
+                              } catch (error) {
+                                toast.error("error in payment");
+
+                                
+                              }
+                            });
+                          }}
+                        ></PayPalButtons>
+                      </div>
+                    </div>
+                  )}
+                </ListGroupItem>
+              )}
               {/*maek as delivered//*/}
             </ListGroup>
           </Card>

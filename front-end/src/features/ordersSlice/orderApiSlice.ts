@@ -32,6 +32,10 @@ interface OrderResponse {
   paidAt: string;
   isDelivered: boolean;
   deliveredAt: string;
+}  
+interface PayPalPayment {
+  paymentId: string;
+  payerId: string;
 }
 export const ordersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -51,11 +55,11 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
-    payOrder: builder.mutation<OrderResponse, { orderId: string; details: unknown }>({
+    payOrder: builder.mutation<OrderResponse, { orderId: string; details: PayPalPayment}>({
       query: ({ orderId, details }) => ({
         url: `${ORDERS_URL}/${orderId}/pay`,
         method: "PUT",
-        body: details,
+        body: {...details},
       }),
     }),
     getPaypalClientId: builder.query<{ clientId: string }, void>({
