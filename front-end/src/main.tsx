@@ -24,6 +24,8 @@ import PamentPage from "./Pages/PaymentPage.tsx";
 import PlaceOrder from "./Pages/PlaceOrder.tsx";
 import OrderPage from "./Pages/OrderPage.tsx";
 import ProfileScreen from "./Pages/ProfileScreen.tsx";
+import AdminRoute from "./components/AdminRoute.tsx";
+import OrderListScreen from "./Pages/admins/OrderListScreen.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,7 +41,10 @@ const router = createBrowserRouter(
         <Route path="/payment" element={<PamentPage />} />
         <Route path="/placeorder" element={<PlaceOrder />} />
         <Route path="/order/:id" element={<OrderPage />} />
-        <Route path="/profile" element={<ProfileScreen/>} />
+        <Route path="/profile" element={<ProfileScreen />} />
+      </Route>
+      <Route path="" element={<AdminRoute />}>
+        <Route path="/admin/orderlist" element={<OrderListScreen />} />
       </Route>
     </Route>
   )
@@ -48,7 +53,13 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <PayPalScriptProvider deferLoading = {true} options={{ clientId:"Aa17t_XgP7sFAihczXOl54AeqULpFNdeITXmvd-FM_6PsBpQ6eYc-oCqQcXsUOIZPkb9XYuEUIltp9gC" }}>
+      <PayPalScriptProvider
+        deferLoading={true}
+        options={{
+          clientId:
+            "Aa17t_XgP7sFAihczXOl54AeqULpFNdeITXmvd-FM_6PsBpQ6eYc-oCqQcXsUOIZPkb9XYuEUIltp9gC",
+        }}
+      >
         <RouterProvider router={router} />
       </PayPalScriptProvider>
     </Provider>

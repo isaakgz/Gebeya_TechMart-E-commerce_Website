@@ -6,6 +6,7 @@ interface AuthState {
     email: string;
     password: string;
     name: string;
+    isAdmin: boolean;
   } | null;
 }
 

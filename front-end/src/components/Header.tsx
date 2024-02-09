@@ -18,8 +18,8 @@ function Header() {
   const [logoutApiCall] = useLogoutMutation();
   const logoutHandler = async () => {
     try {
-      await logoutApiCall(null)
-      
+      await logoutApiCall(null);
+
       dispatch(logout());
       navigate("/login");
     } catch (error) {
@@ -60,6 +60,19 @@ function Header() {
                 <Nav.Link as={Link} to="/login">
                   <FaUser /> Sign In
                 </Nav.Link>
+              )}
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title="Admin" id="adminmenu">
+                  <LinkContainer to="/admin/userlist">
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/productlist">
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/orderlist">
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
               )}
             </Nav>
           </Navbar.Collapse>
