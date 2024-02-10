@@ -19,7 +19,7 @@ const addOrderItem = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "No item in the cart" });
     throw new Error("No item in the cart");
   } else {
-    const userId =req.user?._id ;
+    const userId = req.user?._id;
 
     const order = new Order({
       orderItems: orderItems.map((x) => ({
@@ -53,7 +53,10 @@ const getMyOrders = asyncHandler(async (req, res) => {
 //@route Get /api/orders/:id
 //@acess private
 const getMyOrdersById = asyncHandler(async (req, res) => {
-  const order = await Order.findOne({ _id: req.params.id }).populate("user", "name email");
+  const order = await Order.findOne({ _id: req.params.id }).populate(
+    "user",
+    "name email"
+  );
 
   if (order) {
     res.status(200).json(order);
@@ -62,7 +65,6 @@ const getMyOrdersById = asyncHandler(async (req, res) => {
     throw new Error("Order not found!");
   }
 });
-
 
 // @desc get update order to paid
 //@route post /api/orders/:id/pay
@@ -84,8 +86,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     res.status(404).json({ error: "Order not found!" });
     throw new Error("Order not found!");
   }
- 
-}); 
+});
 
 // @desc get update order to delivered
 //@route put   /api/orders/:id/deliver
@@ -98,8 +99,8 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 //@route Get /api/orders/:id/pay
 //@acess private
 const getOrders = asyncHandler(async (req, res) => {
-  res.send(" get all oreders");
-  // const order = new Order({});
+  const orders = await Order.find({}).populate("user", "id name");
+  res.status(200).json(orders);
 });
 
 export {
