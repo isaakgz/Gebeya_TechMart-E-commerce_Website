@@ -3,6 +3,7 @@ import {
   useGetordersDetailsQuery,
   usePayOrderMutation,
   useGetPaypalClientIdQuery,
+  useDeliverOrderMutation
 } from "../features/ordersSlice/orderApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -34,6 +35,8 @@ function OrderPage() {
   } = useGetordersDetailsQuery(orderId || "");
 
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+  const [deliverOrder, {isLoading:loadingDeliver}] = useDeliverOrderMutation();
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
@@ -185,7 +188,7 @@ function OrderPage() {
                     <div>
                       <Button
                         onClick={async () => {
-                          await payOrder({ orderId, details: {payer:{}} });
+                          await payOrder({ orderId: orderId!, details: { payer: {} } });
                           refetch();
                           toast.success("Order is paid");
                         }}
@@ -208,7 +211,7 @@ function OrderPage() {
                               purchase_units: [
                                 {
                                   amount: {
-                                    value: order?.totalPrice?.toString(),
+                                    value: order?.totalPrice?.toString() ?? '',
                                   },
                                 },
                               ],
@@ -222,9 +225,9 @@ function OrderPage() {
                             
                           }}
                           onApprove={async (data, actions) => {
-                            return actions.order.capture().then(async (details) => {
+                            return actions.order?.capture().then(async (details) => {
                               try {
-                                await payOrder({orderId,  details})
+                                await payOrder({orderId: orderId ?? '', details});
                                 refetch();
                                 toast.success("Order is paid");
                                 
@@ -241,7 +244,20 @@ function OrderPage() {
                   )}
                 </ListGroupItem>
               )}
-              {/*maek as delivered//*/}
+              {loadingDeliver && <Loader />}
+              {userInfo?.isAdmin && order?.isPaid && !order?.isDelivered && (
+                <ListGroupItem>
+                  <Button className="btn btn-block"
+                    onClick={async () => {
+                      await deliverOrder(orderId ?? '');
+                      refetch();
+                      toast.success("Order is delivered");
+                    }}
+                  >
+                    Mark As Delivered
+                  </Button>
+                </ListGroupItem>
+              )}
             </ListGroup>
           </Card>
         </Col>
