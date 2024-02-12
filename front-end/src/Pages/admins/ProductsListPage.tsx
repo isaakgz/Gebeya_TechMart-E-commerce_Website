@@ -1,19 +1,34 @@
 import { Button, Col, Row, Table } from "react-bootstrap";
 import {
-  productApiSlice,
+  useCreatProductMutation,
   useGetProductsQuery,
 } from "../../features/productSlice/productApiSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { LinkContainer } from "react-router-bootstrap";
+import { toast } from "react-toastify";
 
-function ProductsList() {
-  const { data: products, isError, isLoading } = useGetProductsQuery();
+function ProductsListPage() {
+  const { data: products, isError, isLoading, refetch } = useGetProductsQuery();
+    const [createProduct, {isLoading:loadingCreatProduct}] = useCreatProductMutation();
 
   const deleteHndler = (id: string) => {
     console.log(id);
   };
+
+  const createProductHandler  = async ()=>{
+    if(window.confirm("Are You sure to creat new product?")){
+        try {
+            await createProduct()
+            refetch()
+        } catch (error) {
+            toast.error("error adding products")
+            
+        }
+    }
+
+  }
 
   return (
     <>
@@ -22,11 +37,13 @@ function ProductsList() {
           <h1>Products</h1>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3">
+          <Button onClick={createProductHandler} className="btn-sm m-3">
             <FaEdit /> Create Product
           </Button>
         </Col>
       </Row>
+
+      {loadingCreatProduct && <Loader />}
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -77,4 +94,4 @@ function ProductsList() {
   );
 }
 
-export default ProductsList;
+export default ProductsListPage;
