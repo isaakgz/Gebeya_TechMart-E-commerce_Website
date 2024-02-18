@@ -3,6 +3,7 @@ import { PRODUCTS_URL, UPLOADS_URL } from "../../constants";
 import { apiSlice } from "../apiSclices/apiSclices";
 
 interface Review {
+  _id: null | undefined;
   user: string;
   name: string;
   rating: number;
@@ -12,6 +13,7 @@ interface Review {
 }
 
 interface Product {
+
   _id: string;
   user: string;
   name: string;
@@ -78,6 +80,16 @@ export const productApiSlice = apiSlice.injectEndpoints({
       // invalidatesTags: [{ type: "Product", id: "LIST" }],
     }), 
 
+    createProductReview: builder.mutation<Product, { productId: string; review: Review }>({
+      query: ({ productId, review }) => ({
+        url: `${PRODUCTS_URL}/${productId}/reviews`,
+        method: "POST",
+        body: review,
+      }),
+      invalidatesTags: [{ type: "Product", id: "LIST" }],
+    }),
+
+
   }),
 });
 
@@ -88,4 +100,5 @@ export const {
   useUpdateProductMutation,
   useUploadProductImageMutation,
   useDeleteProductMutation,
+  useCreateProductReviewMutation,
 } = productApiSlice;

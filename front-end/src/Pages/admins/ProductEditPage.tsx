@@ -139,17 +139,7 @@ function ProductEditPage() {
                 id="image-file"
                 onChange={uploadFileHandler}
               />
-              {image && (
-                <img
-                  src={image}
-                  alt="Product"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
+             
             </FormGroup>
             <FormGroup controlId="brand" className="my-2">
               <FormLabel>Brand</FormLabel>

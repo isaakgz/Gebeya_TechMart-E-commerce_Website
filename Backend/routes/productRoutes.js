@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { createProduct, deleteProduct, getProductById, getProducts, updateProduct } from "../controllers/productControlers.js";
+import { createProduct, createProductReview, deleteProduct, getProductById, getProducts, updateProduct } from "../controllers/productControlers.js";
 import { protect, admin } from "../middleware/authMiddeleare.js";
 
 
@@ -9,6 +9,9 @@ router.route("/").get(getProducts);
 
 // Get a specific product by ID
 router.route("/:id").get(getProductById).put(protect, admin,updateProduct).delete(protect, admin,deleteProduct);
+//create new review
+router.route("/:id/reviews").post(protect, createProductReview);
+
 
 //create new product
 
