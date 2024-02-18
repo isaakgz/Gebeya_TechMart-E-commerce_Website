@@ -4,19 +4,31 @@ import Message from "../../components/Message";
 
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
-import { useGetUsersQuery } from "../../features/userApiSlices/userApiSlices";
+import { useDeleteUserMutation, useGetUsersQuery } from "../../features/userApiSlices/userApiSlices";
+import { toast } from "react-toastify";
 
 function UserListScreen() {
-  const { data: users, isLoading, isError} = useGetUsersQuery();
+  const { data: users, isLoading, refetch, isError } = useGetUsersQuery({});
+  const [deleteUser, { isLoading: deleteLoading }] = useDeleteUserMutation();
 
-  const deleteHandler = (id: string) => {
-    console.log(users)
+  const deleteHandler = async (id: string) => {
+    if (window.confirm("Are you sure")) {
+      try {
+        await deleteUser(id).unwrap();
+        refetch();
+        toast.success("User removed");
+
+      } catch (error) {
+        toast.error("User not removed");
+      }
+     
+    }
   }
-
 
   return (
     <>
       <h1>Users</h1>
+      {deleteLoading && <Loader />}
       {isLoading ? (
         <Loader />
       ) : isError ? (
