@@ -35,6 +35,7 @@ function ProductsListPage() {
         try {
             await deleteProduct(id)
             refetch()
+            toast.success("product deleted")
         } catch (error) {
             toast.error("error deleting products")
             

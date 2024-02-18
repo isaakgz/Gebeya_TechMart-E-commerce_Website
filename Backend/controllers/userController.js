@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModels.js";
 import genereteToken from "../utils/generetToken.js";
-import Joi from "joi";
+import Joi, { boolean } from "joi";
 import { userSchema } from "../utils/validationSchema.js";
 // @desc  auth user & token
 // @desc  GET /api/users/Login
@@ -148,27 +148,73 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @desc  get /api/users
 // @access private/admin
 const getUsers = asyncHandler(async (req, res) => {
-  res.send("get users");
+  const users = await User.find({});
+  res.status(200).json(users);
+
 });
 // @desc get users by id
 // @desc  get /api/users/:id
 // @access private/admin
 const getUsersById = asyncHandler(async (req, res) => {
-  res.send("get users by id");
+  const user = await User.findById(req.params.id).select("-password");
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    res.send("User not found");
+    throw new Error("User not found");
+  }
 });
 
 // @desc Delete users users
 // @desc  Delete /api/users/:id
 // @access private/admin
 const deleteUsers = asyncHandler(async (req, res) => {
-  res.send("delete users");
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    if (user.isAdmin) {
+      res.status(400);
+      res.send("Admin can not be deleted");
+      throw new Error("Admin can not be deleted");
+    }
+    else{
+      await user.deleteOne({ _id: req.params.id});
+      res.status(200).json({message:"user deleted successfully"});
+    
+    }
+  }
+  else{
+    res.status(404);
+    res.send("User not found");
+    throw new Error("User not found");
+  }
 });
 
 // @desc updates users
 // @desc  PUT /api/users/:id
 // @access private/admin
 const UpdateUser = asyncHandler(async (req, res) => {
-  res.send("update users");
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = Boolean(req.body.isAdmin);
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    res.send("User not found");
+    throw new Error("User not found");
+  }
 });
 
 export {
