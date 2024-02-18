@@ -1,4 +1,4 @@
-serimport asyncHandler from "../middleware/asyncHandler.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModel.js";
 
 const getProducts = asyncHandler(async (req, res) => {
@@ -73,5 +73,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error("resourse not found")
   }
 });
+
+
 
 export { getProducts, getProductById, createProduct, updateProduct };

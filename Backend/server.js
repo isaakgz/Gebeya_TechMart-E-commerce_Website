@@ -1,5 +1,4 @@
 import path from 'path';
-
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -25,21 +24,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
 app.get("/", (req, res) => {
-  res.send("wellocme");
+  res.send("well come");
 });
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 //upload route
-app.use('/api/upload', uploadRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 //paypal route
 app.get('/api/config/paypal', (req, res) => res.send({clientId: process.env.PAYPAL_CLIENT_ID}));
 
-const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
 
 //upload route
 

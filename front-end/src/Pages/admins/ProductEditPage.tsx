@@ -2,6 +2,7 @@ import { Form, Link, useNavigate, useParams } from "react-router-dom";
 import {
   useGetProductsDetailQuery,
   useUpdateProductMutation,
+  useUploadProductImageMutation,
 } from "../../features/productSlice/productApiSlice";
 import { useEffect, useState } from "react";
 import FormContainer from "../../components/FormContainer";
@@ -25,13 +26,15 @@ function ProductEditPage() {
   const {
     data: product,
     isLoading,
-    
+
     error,
   } = useGetProductsDetailQuery(productId ?? "");
-  const [updateProduct, { isLoading: loadingUpdate}] =
+  const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
   const navigate = useNavigate();
 
+  const [uploadProductImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation();
   useEffect(() => {
     if (product) {
       setName(product.name);
@@ -46,7 +49,7 @@ function ProductEditPage() {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedProduct ={
+    const updatedProduct = {
       _id: productId ?? "",
       name,
       price,
@@ -61,8 +64,8 @@ function ProductEditPage() {
       reviews: [],
       __v: 0,
       createdAt: "",
-      updatedAt: ""
-    }
+      updatedAt: "",
+    };
     try {
       await updateProduct(updatedProduct).unwrap();
       navigate("/admin/productlist");
@@ -71,7 +74,25 @@ function ProductEditPage() {
       console.error("Failed to update the product", error);
       toast.error("Failed to update the product");
     }
-  }
+  };
+
+  const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const formData = new FormData();
+    if (file) {
+      formData.append("image", file);
+    }
+    try {
+      const result = await uploadProductImage(formData).unwrap();
+      toast.success(result.message);
+      console.log(result.image, "result");
+
+      setImage(result.image);
+    } catch (error) {
+      console.error("Failed to upload the image", error);
+      toast.error("Failed to upload the image");
+    }
+  };
 
   return (
     <>
@@ -80,8 +101,12 @@ function ProductEditPage() {
       </Link>
       <FormContainer>
         <h1>Edit Product</h1>
-        {loadingUpdate && <Loader />} 
-        {isLoading ? <Loader /> :  error ? <Message variant="danger"> {error as string}</Message> :(
+        {loadingUpdate && <Loader />}
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger"> {"internal server error"}</Message>
+        ) : (
           <Form onSubmit={submitHandler}>
             <FormGroup controlId="name" className="my-2">
               <FormLabel>Name</FormLabel>
@@ -101,15 +126,31 @@ function ProductEditPage() {
                 onChange={(e) => setPrice(Number(e.target.value))}
               />
             </FormGroup>
-            {/* <FormGroup controlId="image" className="my-2">
+            <FormGroup className="my-2">
               <FormLabel>Image</FormLabel>
               <FormControl
                 type="text"
-                placeholder="Enter Image"
+                placeholder="Enter Image url"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               />
-            </FormGroup> */}
+              <FormControl
+                type="file"
+                id="image-file"
+                onChange={uploadFileHandler}
+              />
+              {image && (
+                <img
+                  src={image}
+                  alt="Product"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+            </FormGroup>
             <FormGroup controlId="brand" className="my-2">
               <FormLabel>Brand</FormLabel>
               <FormControl

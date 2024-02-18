@@ -29,11 +29,15 @@ const upload = multer({
     fileFilter: function(req, file, cb) {
         checkFileType(file, cb);
     }
+    
 });
 
 router.post('/', upload.single('image'), (req, res) => {   
-    res.send(`/${req.file.path}`);
-    res.send('Image uploaded');
+    const imagePath = `/${req.file.path}`.replace(/\\/g, '/');
+    res.send({
+        image: imagePath,
+        message:"Image Uploaded Successfully!"
+    });
 });
 
 
