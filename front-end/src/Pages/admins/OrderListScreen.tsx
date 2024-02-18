@@ -18,7 +18,7 @@ function OrderListScreen() {
       {isLoading ? (
         <Loader />
       ) : isError ? (
-        <Message variant="danger"> {error as string} </Message>
+        <Message variant="danger"> {"internal server Error"} </Message>
       ) : (
         <Table striped hover responsive className="table-sm">
           <thead>

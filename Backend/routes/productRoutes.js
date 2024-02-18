@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { createProduct, getProductById, getProducts, updateProduct } from "../controllers/productControlers.js";
+import { createProduct, deleteProduct, getProductById, getProducts, updateProduct } from "../controllers/productControlers.js";
 import { protect, admin } from "../middleware/authMiddeleare.js";
 
 
@@ -8,7 +8,7 @@ import { protect, admin } from "../middleware/authMiddeleare.js";
 router.route("/").get(getProducts);
 
 // Get a specific product by ID
-router.route("/:id").get(getProductById).put(protect, admin,updateProduct);
+router.route("/:id").get(getProductById).put(protect, admin,updateProduct).delete(protect, admin,deleteProduct);
 
 //create new product
 

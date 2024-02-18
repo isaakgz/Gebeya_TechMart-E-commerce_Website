@@ -1,6 +1,7 @@
 import { Button, Col, Row, Table } from "react-bootstrap";
 import {
   useCreatProductMutation,
+  useDeleteProductMutation,
   useGetProductsQuery,
 } from "../../features/productSlice/productApiSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -12,13 +13,12 @@ import { toast } from "react-toastify";
 function ProductsListPage() {
   const { data: products, isError, isLoading, refetch } = useGetProductsQuery();
     const [createProduct, {isLoading:loadingCreatProduct}] = useCreatProductMutation();
+    const [deleteProduct, {isLoading:loadingDelte}] = useDeleteProductMutation();
 
-  const deleteHndler = (id: string) => {
-    console.log(id);
-  };
+  
 
   const createProductHandler  = async ()=>{
-    if(window.confirm("Are You sure to creat new product?")){
+    if(window.confirm("Are You sure to create new product?")){
         try {
             await createProduct()
             refetch()
@@ -30,6 +30,17 @@ function ProductsListPage() {
 
   }
 
+  const deleteHandler =async (id:string)=>{
+    if(window.confirm("Are You sure to delete this product?")){
+        try {
+            await deleteProduct(id)
+            refetch()
+        } catch (error) {
+            toast.error("error deleting products")
+            
+        }
+    }
+  }
   return (
     <>
       <Row className="align-items-center">
@@ -44,6 +55,7 @@ function ProductsListPage() {
       </Row>
 
       {loadingCreatProduct && <Loader />}
+      {loadingDelte && <Loader />}
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -79,7 +91,7 @@ function ProductsListPage() {
                     <Button
                       variant="danger"
                       className="btn-sm"
-                      onClick={deleteHndler(product._id)}
+                      onClick={() => deleteHandler(product._id)}
                     >
                       <FaTrash  style={{color:"white"}}/>
                     </Button>
