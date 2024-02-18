@@ -9,7 +9,7 @@ import { FaTimes } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
 function OrderListScreen() {
-  const { data: orders, isLoading, isError, error } = useGetOrdersQuery();
+  const { data: orders, isLoading, isError,  } = useGetOrdersQuery();
   console.log(orders);
 
   return (

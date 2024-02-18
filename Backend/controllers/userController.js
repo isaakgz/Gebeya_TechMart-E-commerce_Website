@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModels.js";
 import genereteToken from "../utils/generetToken.js";
-import Joi, { boolean } from "joi";
+import Joi from "joi";
 import { userSchema } from "../utils/validationSchema.js";
 // @desc  auth user & token
 // @desc  GET /api/users/Login
