@@ -6,6 +6,7 @@ import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDeleteUserMutation, useGetUsersQuery } from "../../features/userApiSlices/userApiSlices";
 import { toast } from "react-toastify";
+import Meta from "../../components/Meta";
 
 function UserListScreen() {
   const { data: users, isLoading, refetch, isError } = useGetUsersQuery({});
@@ -27,6 +28,7 @@ function UserListScreen() {
 
   return (
     <>
+    <Meta title="Users" />
       <h1>Users</h1>
       {deleteLoading && <Loader />}
       {isLoading ? (

@@ -23,6 +23,7 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { toast } from "react-toastify";
+import Meta from "../components/Meta";
 
 function OrderPage() {
   const { id: orderId } = useParams();
@@ -74,6 +75,7 @@ function OrderPage() {
     <Message variant="danger">{isError}</Message>
   ) : (
     <>
+    <Meta title="Order" />
       <h1>Order: {order?._id as ReactNode}</h1>
       <Row>
         <Col md={8}>

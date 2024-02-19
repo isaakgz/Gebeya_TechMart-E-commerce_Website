@@ -1,7 +1,7 @@
 import { Nav, Badge, Navbar, Container, NavDropdown } from "react-bootstrap";
-import { FaUser } from "react-icons/fa";
+import { FaCartPlus, FaUser } from "react-icons/fa";
 import { MdShoppingCart } from "react-icons/md";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -33,8 +33,9 @@ function Header() {
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
         <Container>
           <Navbar.Brand as={Link} to="/">
-            <img src={logo} alt="logo" />
-            Gebeya
+          <FaCartPlus  style={{ marginRight: "5px" }}
+           />
+            Gebeya Tech Mart
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

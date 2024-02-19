@@ -11,6 +11,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import Paginate from "../../components/Paginate";
+import Meta from "../../components/Meta";
 
 function ProductsListPage() {
   const {pageNumber} = useParams();
@@ -47,6 +48,7 @@ function ProductsListPage() {
   }
   return (
     <>
+    <Meta title="Products" />
       <Row className="align-items-center">
         <Col>
           <h1>Products</h1>

@@ -23,6 +23,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { toast } from "react-toastify";
+import Meta from "../components/Meta";
 
 type ProductId = {
   id: string;
@@ -88,6 +89,7 @@ function ProductPage() {
 
   return (
     <>
+    <Meta title="Product" />
       <Link className="btn btn-light my-3" to="/">
         Go Back
       </Link>
@@ -100,6 +102,7 @@ function ProductPage() {
         </Message>
       ) : (
         <>
+        <Meta title={product?.name}  description={product?.description}/>
           <Row>
             <Col md={5}>
               <Image src={product?.image} alt={product?.name} fluid />

@@ -19,6 +19,7 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { RootState } from "../store";
   import  { useEffect } from "react";
+import Meta from "../components/Meta";
   
   // creating a schema for for input data
   const userSchema = z
@@ -81,6 +82,7 @@ import {
       };
     return (
       <FormContainer>
+        <Meta title="Sign Up" />
         <h1>Sign Up</h1>
         <Form onSubmit={handleSubmit((data) => submitHandler(data))}>
         <FormGroup className="my-3">

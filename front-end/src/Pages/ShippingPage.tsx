@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { saveShippingAdress } from "../features/cartSlice/cartSlice";
 import CheckOutSteps from "../components/CheckOutSteps";
+import Meta from "../components/Meta";
 
 function ShippingPage() {
   const cart = useSelector((state: RootState) => state.cart);
@@ -28,6 +29,7 @@ function ShippingPage() {
   };
   return (
     <FormContainer>
+      <Meta title="Shipping Information" />
       <CheckOutSteps step1={true} step2={true} step3={false} step4={false} />
       <h1>Shipping Information</h1>
       <Form onSubmit={submitHandler}>

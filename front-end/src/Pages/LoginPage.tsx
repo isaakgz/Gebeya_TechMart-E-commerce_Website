@@ -18,7 +18,8 @@ import { setCredentials } from "../features/authSlice/authSlice";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import  { useEffect } from "react";
+import { useEffect } from "react";
+import Meta from "../components/Meta";
 
 // creating a schema for for input data
 const userSchema = z.object({
@@ -67,6 +68,7 @@ function LoginPage() {
   }, [userInfo, redirect, navigate]);
   return (
     <FormContainer>
+      <Meta title="Log In" />
       <h1>Sign In</h1>
       <Form onSubmit={handleSubmit((data) => submitHandler(data))}>
         <FormGroup className="my-3">

@@ -11,6 +11,7 @@ import Message from "../../components/Message";
 import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
 import { toast } from "react-toastify";
+import Meta from "../../components/Meta";
 
 function ProductEditPage() {
   const { id: productId } = useParams();
@@ -33,7 +34,7 @@ function ProductEditPage() {
     useUpdateProductMutation();
   const navigate = useNavigate();
 
-  const [uploadProductImage, { isLoading: loadingUpload }] =
+  const [uploadProductImage] =
     useUploadProductImageMutation();
   useEffect(() => {
     if (product) {
@@ -100,6 +101,7 @@ function ProductEditPage() {
         Go Back
       </Link>
       <FormContainer>
+        <Meta title="Edit Product" />
         <h1>Edit Product</h1>
         {loadingUpdate && <Loader />}
         {isLoading ? (

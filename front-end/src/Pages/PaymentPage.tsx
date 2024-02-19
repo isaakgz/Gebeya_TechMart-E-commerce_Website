@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../store";
 import { savePaymentMethod } from "../features/cartSlice/cartSlice";
+import Meta from "../components/Meta";
 
 function PaymentPage() {
   const [paymentMethod, setPamentMethod] = useState("PayPal");
@@ -37,6 +38,7 @@ function PaymentPage() {
 
   return (
     <FormContainer>
+      <Meta title="Payment Method" />
       <CheckOutSteps step1={true} step2={true} step3={true} step4={false} />
       <h1 className="text-center"> Payment Method</h1>
       <Form onSubmit={submitHandler}>

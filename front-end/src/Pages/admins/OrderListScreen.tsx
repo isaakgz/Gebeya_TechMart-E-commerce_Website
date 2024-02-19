@@ -7,6 +7,7 @@ import {
 } from "../../features/ordersSlice/orderApiSlice";
 import { FaTimes } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
+import Meta from "../../components/Meta";
 
 function OrderListScreen() {
   const { data: orders, isLoading, isError,  } = useGetOrdersQuery();
@@ -14,6 +15,7 @@ function OrderListScreen() {
 
   return (
     <>
+    <Meta title="Orders" />
       <h1>Orders</h1>
       {isLoading ? (
         <Loader />

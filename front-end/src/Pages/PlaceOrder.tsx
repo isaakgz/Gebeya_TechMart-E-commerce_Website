@@ -17,6 +17,7 @@ import Loader from "../components/Loader";
 import { clearCart } from "../features/cartSlice/cartSlice";
 import { useCreateOrderMutation } from "../features/ordersSlice/orderApiSlice";
 import { toast } from "react-toastify";
+import Meta from "../components/Meta";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ const PlaceOrder = () => {
 
   return (
     <>
+    <Meta title="Place Order" />
       <CheckOutSteps step1={true} step2={true} step3={true} step4={true} />
       <Row>
         <Col md="8">

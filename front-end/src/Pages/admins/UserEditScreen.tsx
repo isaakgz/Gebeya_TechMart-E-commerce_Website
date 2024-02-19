@@ -11,6 +11,7 @@ import {
   useGetUserDetailsQuery,
   useUpdateUserMutation,
 } from "../../features/userApiSlices/userApiSlices";
+import Meta from "../../components/Meta";
 
 function UserEditScreen() {
   const { id: userId } = useParams();
@@ -56,6 +57,7 @@ const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
   
   return (
     <>
+    <Meta title="Edit User" />
       <Link className="btn btn-light my-3" to="/admin/userlist">
         Go Back
       </Link>

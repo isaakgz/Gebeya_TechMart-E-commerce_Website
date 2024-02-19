@@ -15,6 +15,7 @@ import {
 } from "react-bootstrap";
 import { addToCart, removeFromCart } from "../features/cartSlice/cartSlice";
 import { CartItem } from "../utils/cartUtils";
+import Meta from "../components/Meta";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function CartPage() {
   }
   return (
     <Row>
+      <Meta title="Shopping Cart" />
       <Col md={8}>
         <h1 style={{ marginBottom: "20px" }}> Shopping Cart</h1>
         {cartItems.length === 0 ? (
