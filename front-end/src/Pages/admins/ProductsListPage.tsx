@@ -9,9 +9,12 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import Paginate from "../../components/Paginate";
 
 function ProductsListPage() {
-  const { data: products, isError, isLoading, refetch } = useGetProductsQuery();
+  const {pageNumber} = useParams();
+  const { data, isError, isLoading, refetch } = useGetProductsQuery({pageNumber:pageNumber?Number(pageNumber):1});
     const [createProduct, {isLoading:loadingCreatProduct}] = useCreatProductMutation();
     const [deleteProduct, {isLoading:loadingDelte}] = useDeleteProductMutation();
 
@@ -75,7 +78,7 @@ function ProductsListPage() {
               </tr>
             </thead>
             <tbody>
-              {products?.map((product) => (
+              {data?.products?.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -101,6 +104,11 @@ function ProductsListPage() {
               ))}
             </tbody>
           </Table>
+          <Paginate
+            pages={data?.pages || 1}
+            page={data?.page || 1}
+            isAdmin={true}
+          />
         </>
       )}
     </>
