@@ -24,7 +24,7 @@ interface productsProps {
 function Products({ product }: productsProps) {
   return (
     <Card className="my-3 p-3 rounded">
-      <Link to={`product/${product._id}`}>
+      <Link to={`/product/${product._id}`}>
         <CardImg src={product.image} variant="top" />
       </Link>
       <CardBody>

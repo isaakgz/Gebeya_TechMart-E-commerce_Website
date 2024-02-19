@@ -3,15 +3,23 @@ import Products from "../components/Products";
 import { useGetProductsQuery } from "../features/productSlice/productApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Paginate from "../components/Paginate";
 
 function HomePage() {
-  const {pageNumber} = useParams()
-    const { data, isLoading, isError } = useGetProductsQuery({pageNumber:pageNumber?Number(pageNumber):1});
+  const { pageNumber, keyword } = useParams();
+  const { data, isLoading, isError } = useGetProductsQuery({
+    pageNumber: pageNumber ? Number(pageNumber) : 1,
+    keyword: keyword ? keyword : "",
+  });
 
   return (
     <>
+      {keyword && (
+        <Link className="btn btn-light  mb-4" to="/">
+          Go Back
+        </Link>
+      )}
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -33,8 +41,8 @@ function HomePage() {
             pages={data?.pages || 1}
             page={data?.page || 1}
             isAdmin={false}
+            keyword={keyword ? keyword : ""}
           />
-          
         </>
       )}
     </>

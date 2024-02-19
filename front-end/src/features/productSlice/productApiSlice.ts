@@ -37,10 +37,10 @@ interface UploadResult {
 }
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<{ products: Product[]; page: number; pages: number }, { pageNumber: number }>({
-      query: ({ pageNumber }) => ({
+    getProducts: builder.query<{ products: Product[]; page: number; pages: number }, { pageNumber: number, keyword: string }>({
+      query: ({ pageNumber, keyword }) => ({
         url: PRODUCTS_URL,
-        params: { pageNumber },
+        params: { pageNumber, keyword },
       }),
       providesTags: [{ type: "Product", id: "LIST" }],
       keepUnusedDataFor: 5,
