@@ -1,11 +1,13 @@
 import express from "express";
 const router = express.Router();
-import { createProduct, createProductReview, deleteProduct, getProductById, getProducts, updateProduct } from "../controllers/productControlers.js";
+import { createProduct, createProductReview, deleteProduct, getProductById, getProducts, getTopProducts, updateProduct } from "../controllers/productControlers.js";
 import { protect, admin } from "../middleware/authMiddeleare.js";
 
 
 // Get all products
 router.route("/").get(getProducts);
+// Get top rated products
+router.route("/top").get(getTopProducts);
 
 // Get a specific product by ID
 router.route("/:id").get(getProductById).put(protect, admin,updateProduct).delete(protect, admin,deleteProduct);
