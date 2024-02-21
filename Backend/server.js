@@ -36,6 +36,7 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/api/uploads', uploadRoutes);
 
 console.log(app.get('env'));
+
 // Serve static assets if in production
 
 if (process.env.NODE_ENV === "production") {
