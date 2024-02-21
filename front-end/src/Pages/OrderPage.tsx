@@ -19,7 +19,7 @@ import {
 } from "react-bootstrap";
 
 //import paypal buttons
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { PayPalButtons, SCRIPT_LOADING_STATE, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { toast } from "react-toastify";
@@ -55,11 +55,17 @@ function OrderPage() {
         paypalDispatch({
           type: "resetOptions",
           value: {
-            clientId: paypal.clientId, // Fix: Change 'client-id' to 'clientId'
+            clientId: paypal.clientId,
             currency: "USD",
           },
         });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" }); // Fix: Change value to { state: "pending" }
+        paypalDispatch({ 
+          type: "setLoadingStatus", 
+          value: { 
+            state: "pending" as SCRIPT_LOADING_STATE, 
+            message: "loading"
+          } 
+        });
       };
       if (order && !order.isPaid) {
         if (!window.paypal) {
@@ -190,7 +196,7 @@ function OrderPage() {
                     <div>
                       <Button
                         onClick={async () => {
-                          await payOrder({ orderId: orderId!, details: { payer: {} } });
+                          await payOrder({ orderId: orderId!, details: { payer: "", payerId:"", paymentId:"" } });
                           refetch();
                           toast.success("Order is paid");
                         }}
@@ -226,17 +232,15 @@ function OrderPage() {
                            
                             
                           }}
-                          onApprove={async (data, actions) => {
+                          onApprove={async (_data, actions) => {
                             return actions.order?.capture().then(async (details) => {
                               try {
-                                await payOrder({orderId: orderId ?? '', details});
+                                await payOrder({orderId: orderId ?? '', details:{payer: "", payerId: details.payer.payer_id || "", paymentId: details.id}});
                                 refetch();
                                 toast.success("Order is paid");
                                 
                               } catch (error) {
                                 toast.error("error in payment");
-
-                                
                               }
                             });
                           }}

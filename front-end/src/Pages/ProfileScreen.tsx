@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -136,7 +136,7 @@ const ProfileScreen = () => {
             <tbody>
               {orders?.map((order) => (
                 <tr key={order._id as Key}>
-                  <td>{order._id}</td>
+                  <td>{(order._id as string).toString()}</td>
                   <td>{order.createdAt?.substring(0, 10)}</td>
                   <td>{order.totalPrice}</td>
                   <td>

@@ -1,4 +1,3 @@
-import { number } from "zod";
 
 export interface CartItem {
   product: unknown;

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import Meta from "../../components/Meta";
 
 function UserListScreen() {
-  const { data: users, isLoading, refetch, isError } = useGetUsersQuery({});
+  const { data: users, isLoading, refetch, isError } = useGetUsersQuery(null);
   const [deleteUser, { isLoading: deleteLoading }] = useDeleteUserMutation();
 
   const deleteHandler = async (id: string) => {

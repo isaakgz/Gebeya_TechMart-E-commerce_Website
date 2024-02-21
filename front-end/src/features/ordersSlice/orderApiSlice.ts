@@ -36,6 +36,8 @@ interface OrderResponse {
 interface PayPalPayment {
   paymentId: string;
   payerId: string;
+  payer:string
+  
 }
 export const ordersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

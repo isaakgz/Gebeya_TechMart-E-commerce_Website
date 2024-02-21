@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Button, FormControl } from "react-bootstrap";
 import { Form, useNavigate, useParams } from "react-router-dom"
-import { set } from "zod";
 
 function SearchBox() {
     const navigate = useNavigate()

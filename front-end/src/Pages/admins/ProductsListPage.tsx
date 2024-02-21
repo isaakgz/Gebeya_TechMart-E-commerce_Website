@@ -15,9 +15,9 @@ import Meta from "../../components/Meta";
 
 function ProductsListPage() {
   const {pageNumber} = useParams();
-  const { data, isError, isLoading, refetch } = useGetProductsQuery({pageNumber:pageNumber?Number(pageNumber):1});
-    const [createProduct, {isLoading:loadingCreatProduct}] = useCreatProductMutation();
-    const [deleteProduct, {isLoading:loadingDelte}] = useDeleteProductMutation();
+  const { data, isError, isLoading, refetch } = useGetProductsQuery({pageNumber: pageNumber ? Number(pageNumber) : 1, keyword: ''});
+  const [createProduct, {isLoading:loadingCreatProduct}] = useCreatProductMutation();
+  const [deleteProduct, {isLoading:loadingDelte}] = useDeleteProductMutation();
 
   
 
