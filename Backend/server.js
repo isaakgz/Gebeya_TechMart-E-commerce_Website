@@ -35,7 +35,7 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 //upload route
 app.use('/api/uploads', uploadRoutes);
 
-console.log(app.get('env'));
+// console.log(app.get('env'));
 
 // Serve static assets if in production
 
