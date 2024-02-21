@@ -10,6 +10,7 @@ Gebeya Tech Mart is an e-commerce website built using the MERN stack (MongoDB, E
 - Shopping cart
 - Checkout process
 - User profiles
+- payment with PayPal
 
 ## Technologies Used
 
