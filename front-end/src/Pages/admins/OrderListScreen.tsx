@@ -11,7 +11,7 @@ import Meta from "../../components/Meta";
 
 function OrderListScreen() {
   const { data: orders, isLoading, isError,  } = useGetOrdersQuery();
-  console.log(orders);
+  // console.log(orders);
 
   return (
     <>

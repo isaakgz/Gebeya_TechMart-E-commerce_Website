@@ -86,7 +86,7 @@ function ProductEditPage() {
     try {
       const result = await uploadProductImage(formData).unwrap();
       toast.success(result.message);
-      console.log(result.image, "result");
+      // console.log(result.image, "result");
 
       setImage(result.image);
     } catch (error) {
